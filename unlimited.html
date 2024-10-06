@@ -90,6 +90,7 @@
         var num1, num2;
         let timer;
         let timeElapsed = 0;
+        let timestart = false;
 
         function getRandomNumber(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -107,7 +108,10 @@
                 currentSum = previousSum + num2;
             }
             displayProblem(num1, num2);
-            startTimer();
+            if (!timestart) {
+                timestart = true;
+                startTimer();
+            }
         }
 
         function displayProblem(num1, num2) {
