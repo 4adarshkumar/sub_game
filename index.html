@@ -3,170 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sum Game</title>
+    <title>Math Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
+            color: #333;
             text-align: center;
             padding: 50px;
         }
-
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            margin: auto;
-        }
-
         h1 {
-            color: #333;
+            color: #4CAF50;
         }
-
-        input {
-            padding: 10px;
-            width: 100px;
-            margin-right: 10px;
-        }
-
         button {
-            padding: 10px 20px;
-            background-color: #28a745;
+            background-color: #4CAF50;
             color: white;
-            border: none;
-            border-radius: 5px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
             cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
-
         button:hover {
-            background-color: #218838;
-        }
-
-        #history {
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .game-over {
-            color: red;
-            font-weight: bold;
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Sum Game</h1>
-        <p>Enter the sum of the numbers:</p>
-        <div id="problem">
-        </div>
-
-        <input type="number" id="userInput" placeholder="Your answer">
-        <button onclick="checkAnswer()">Submit</button>
-
-        <p id="message"></p>
-
-        <div id="history">
-            <h3>Sum History:</h3>
-            <ul id="sumHistory">
-            </ul>
-        </div>
-
-        <button id="restartButton" style="display: none;" onclick="restartGame()">Restart</button>
-    </div>
-
-    <script>
-        let previousSum = 0; 
-        let currentSum = 0;   
-        let history = [];    
-        var num1, num2;
-
-        // Function to generate a random number between min and max (inclusive)
-        function getRandomNumber(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        // Function to start the game or move to the next round
-        function startGame() {
-            // Generate the first sum if it's the first round
-            if (previousSum === 0) {
-                num1 = getRandomNumber(1, 99);
-                num2 = getRandomNumber(1, 99);
-                currentSum = num1 + num2;
-                previousSum = currentSum;
-            } else {
-                // Add another random number to the previous sum for the next round
-                num1 = previousSum;
-                num2 = getRandomNumber(1, 99);
-                currentSum = previousSum + num2;
-            }
-            displayProblem(num1, num2);
-        }
-
-        // Function to display the current problem to the user
-        function displayProblem(num1, num2) {
-            document.getElementById('problem').innerHTML = `${num1} + ${num2}`;
-            document.getElementById('userInput').value = ''; 
-        }
-
-        function checkAnswer() {
-            let userAnswer = parseInt(document.getElementById('userInput').value);
-
-            if (userAnswer === currentSum) {
-                previousSum = currentSum;
-                history.push({ numbers: [num1, num2], sum: currentSum });
-                updateHistory();           
-                startGame();               
-                document.getElementById('message').textContent = 'Correct! Keep going.';
-            } else {
-                document.getElementById('message').textContent = `Game Over! Your answer is incorrect. Correct answer is ${currentSum}`;
-                document.getElementById('message').classList.add('game-over');
-                disableGame();
-            }
-        }
-
-        function updateHistory() {
-            let historyList = document.getElementById('sumHistory');
-            historyList.innerHTML = '';
-
-            history.forEach((entry, index) => {
-                let listItem = document.createElement('li');
-                listItem.textContent = `${index + 1}: ${entry.numbers.join(' + ')} = ${entry.sum}`;
-                historyList.appendChild(listItem);
-            });
-        }
-
-        // Function to disable input and button after game over
-        function disableGame() {
-            document.getElementById('userInput').disabled = true;
-            document.querySelector('button[onclick="checkAnswer()"]').disabled = true;
-            document.getElementById('restartButton').style.display = 'inline-block';
-        }
-
-        // Add event listener for Enter key
-        document.getElementById('userInput').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                checkAnswer();
-            }
-        });
-
-        // Start the game on page load
-        window.onload = startGame;
-
-        // Add a new function to restart the game
-        function restartGame() {
-            previousSum = 0;
-            currentSum = 0;
-            history = [];
-            document.getElementById('userInput').disabled = false;
-            document.querySelector('button[onclick="checkAnswer()"]').disabled = false;
-            document.getElementById('restartButton').style.display = 'none';
-            document.getElementById('message').textContent = '';
-            document.getElementById('message').classList.remove('game-over');
-            document.getElementById('sumHistory').innerHTML = '';
-            startGame();
-        }
-    </script>
+    <h1>Welcome to the Math Game</h1>
+    <button onclick="window.location.href='timer.html'">Timer Mode</button>
+    <button onclick="window.location.href='unlimited.html'">Unlimited Mode</button>
 </body>
 </html>

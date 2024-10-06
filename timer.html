@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            width: 100px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #history {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .game-over {
+            color: red;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="startUI">
+            <h1>Sum Game</h1>
+            <input type="number" id="timerInput" placeholder="Timer (seconds)">
+            <button onclick="startGame()">Start Game</button>
+        </div>
+
+        <div id="gameUI" class="hidden">
+            <p>Enter the sum of the numbers:</p>
+            <div id="problem"></div>
+
+            <input type="number" id="userInput" placeholder="Your answer">
+
+            <p id="message"></p>
+
+            <div id="history">
+                <h3>Sum History:</h3>
+                <ul id="sumHistory"></ul>
+            </div>
+
+            <button id="restartButton" style="display: none;" onclick="restartGame()">Restart</button>
+            
+            <p id="timerDisplay"></p>
+        </div>
+    </div>
+
+    <script>
+        let previousSum = 0; 
+        let currentSum = 0;   
+        let history = [];    
+        var num1, num2;
+        let timer;
+        let timeLeft;
+        let timestart;
+
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function startGame() {
+            const timerInput = document.getElementById('timerInput').value;
+            if (timerInput && !timestart) {
+                timeLeft = parseInt(timerInput);
+                document.getElementById('timerInput').disabled = true;
+                timestart = true;
+                startTimer();
+            }
+
+            document.getElementById('startUI').classList.add('hidden');
+            document.getElementById('gameUI').classList.remove('hidden');
+
+            if (previousSum === 0) {
+                num1 = getRandomNumber(1, 99);
+                num2 = getRandomNumber(1, 99);
+                currentSum = num1 + num2;
+                previousSum = currentSum;
+            } else {
+                num1 = previousSum;
+                num2 = getRandomNumber(1, 99);
+                currentSum = previousSum + num2;
+            }
+            displayProblem(num1, num2);
+        }
+
+        function displayProblem(num1, num2) {
+            document.getElementById('problem').innerHTML = `${num1} + ${num2}`;
+            document.getElementById('userInput').value = ''; 
+        }
+
+        function checkAnswer() {
+            let userAnswer = parseInt(document.getElementById('userInput').value);
+
+            if (userAnswer === currentSum) {
+                previousSum = currentSum;
+                history.push({ numbers: [num1, num2], sum: currentSum });
+                updateHistory();           
+                startGame();               
+                document.getElementById('message').textContent = 'Correct! Keep going.';
+            } else {
+                document.getElementById('message').textContent = `Game Over! Your answer is incorrect. Correct answer is ${currentSum}`;
+                document.getElementById('message').classList.add('game-over');
+                clearInterval(timer); // Stop the timer on wrong answer
+                disableGame();
+            }
+        }
+
+        function updateHistory() {
+            let historyList = document.getElementById('sumHistory');
+            historyList.innerHTML = '';
+
+            history.forEach((entry, index) => {
+                let listItem = document.createElement('li');
+                listItem.textContent = `${index + 1}: ${entry.numbers.join(' + ')} = ${entry.sum}`;
+                historyList.appendChild(listItem);
+            });
+        }
+
+        function disableGame() {
+            document.getElementById('userInput').disabled = true;
+            document.querySelector('button[onclick="checkAnswer()"]').disabled = true;
+            document.getElementById('restartButton').style.display = 'inline-block';
+            clearInterval(timer);
+        }
+
+        document.getElementById('userInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        function startTimer() {
+            timer = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('message').textContent = 'Time Over!';
+                    document.getElementById('message').classList.add('game-over');
+                    disableGame();
+                } else {
+                    document.getElementById('timerDisplay').textContent = `Time left: ${timeLeft} seconds`;
+                    timeLeft--;
+                }
+            }, 1000);
+        }
+
+        function restartGame() {
+            previousSum = 0;
+            currentSum = 0;
+            history = [];
+            document.getElementById('userInput').disabled = false;
+            document.querySelector('button[onclick="checkAnswer()"]').disabled = false;
+            document.getElementById('restartButton').style.display = 'none';
+            document.getElementById('message').textContent = '';
+            document.getElementById('message').classList.remove('game-over');
+            document.getElementById('sumHistory').innerHTML = '';
+            document.getElementById('timerInput').disabled = false;
+            document.getElementById('timerDisplay').textContent = '';
+            document.getElementById('startUI').classList.remove('hidden');
+            document.getElementById('gameUI').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
