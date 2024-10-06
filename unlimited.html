@@ -68,7 +68,6 @@
         </div>
 
         <input type="number" id="userInput" placeholder="Your answer">
-        <button onclick="checkAnswer()">Submit</button>
 
         <p id="message"></p>
 
@@ -149,7 +148,6 @@
 
         function disableGame() {
             document.getElementById('userInput').disabled = true;
-            document.querySelector('button[onclick="checkAnswer()"]').disabled = true;
             document.getElementById('restartButton').style.display = 'inline-block';
         }
 
@@ -175,7 +173,6 @@
             currentSum = 0;
             history = [];
             document.getElementById('userInput').disabled = false;
-            document.querySelector('button[onclick="checkAnswer()"]').disabled = false;
             document.getElementById('restartButton').style.display = 'none';
             document.getElementById('message').textContent = '';
             document.getElementById('message').classList.remove('game-over');

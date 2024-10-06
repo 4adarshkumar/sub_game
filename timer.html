@@ -94,6 +94,7 @@
         let timer;
         let timeLeft;
         let timestart;
+        let initialTime; // New variable to store the initial timer value
 
         function getRandomNumber(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -103,6 +104,7 @@
             const timerInput = document.getElementById('timerInput').value;
             if (timerInput && !timestart) {
                 timeLeft = parseInt(timerInput);
+                initialTime = timeLeft; // Store the initial timer value
                 document.getElementById('timerInput').disabled = true;
                 timestart = true;
                 startTimer();
@@ -159,7 +161,6 @@
 
         function disableGame() {
             document.getElementById('userInput').disabled = true;
-            document.querySelector('button[onclick="checkAnswer()"]').disabled = true;
             document.getElementById('restartButton').style.display = 'inline-block';
             clearInterval(timer);
         }
@@ -189,7 +190,6 @@
             currentSum = 0;
             history = [];
             document.getElementById('userInput').disabled = false;
-            document.querySelector('button[onclick="checkAnswer()"]').disabled = false;
             document.getElementById('restartButton').style.display = 'none';
             document.getElementById('message').textContent = '';
             document.getElementById('message').classList.remove('game-over');
@@ -198,6 +198,11 @@
             document.getElementById('timerDisplay').textContent = '';
             document.getElementById('startUI').classList.remove('hidden');
             document.getElementById('gameUI').classList.add('hidden');
+            
+            // Restart with the same previous timer limit
+            timeLeft = initialTime;
+            timestart = false;
+            startGame();
         }
     </script>
 </body>
