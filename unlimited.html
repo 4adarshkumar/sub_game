@@ -137,13 +137,13 @@
 
         function updateHistory() {
             let historyList = document.getElementById('sumHistory');
-            historyList.innerHTML = '';
+            historyList.innerHTML = 'Score: ' + history.length;
 
-            history.forEach((entry, index) => {
-                let listItem = document.createElement('li');
-                listItem.textContent = `${index + 1}: ${entry.numbers.join(' + ')} = ${entry.sum}`;
-                historyList.appendChild(listItem);
-            });
+            // history.forEach((entry, index) => {
+            //     let listItem = document.createElement('li');
+            //     listItem.textContent = `${index + 1}: ${entry.numbers.join(' + ')} = ${entry.sum}`;
+            //     historyList.appendChild(listItem);
+            // });
         }
 
         function disableGame() {
@@ -178,6 +178,7 @@
             document.getElementById('message').classList.remove('game-over');
             document.getElementById('sumHistory').innerHTML = '';
             document.getElementById('timerDisplay').textContent = '';
+            timestart = false;
             startGame();
         }
     </script>
