@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Random Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            width: 100px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #history {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .game-over {
+            color: red;
+            font-weight: bold;
+        }
+
+        #timerDisplay {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Multiplication Game</h1>
+        <p>Enter the Multiplication of the numbers:</p>
+        <div id="problem">
+        </div>
+        
+        <input type="number" id="userInput" placeholder="Your answer">
+
+        <p id="message"></p>
+
+        <div id="history">
+            <h3>Product History:</h3>
+            <ul id="productHistory">
+            </ul>
+        </div>
+
+        <p id="timerDisplay"></p>
+
+        <button id="restartButton" style="display: none;" onclick="restartGame()">Restart</button>
+    </div>
+
+    <script>
+        let previousSum = 0; 
+        let currentSum = 0;   
+        let history = [];    
+        var num1, num2;
+        let timer;
+        let timeElapsed = 0;
+        let timeStart = false;
+
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function startGame() {
+            num1 = getRandomNumber(21, 99);
+            num2 = getRandomNumber(11, 20);
+            displayProblem(num1, num2);
+            if (!timeStart) {
+                timeStart = true;
+                startTimer();
+            }
+        }
+
+        function displayProblem(num1, num2) {
+            if (Math.random() < 0.5) {
+                document.getElementById('problem').innerHTML = `${num1} * ${num2}`;
+            } else {
+                document.getElementById('problem').innerHTML = `${num2} * ${num1}`;
+            }
+            document.getElementById('userInput').value = ''; 
+        }
+
+        function checkAnswer() {
+            let userAnswer = parseInt(document.getElementById('userInput').value);
+
+            if (userAnswer === num1 * num2) {
+                history.push({ numbers: [num1, num2], product: num1 * num2 });
+                updateHistory();           
+                startGame();               
+                document.getElementById('message').textContent = 'Correct! Keep going.';
+            } else {
+                document.getElementById('message').textContent = `Game Over! Your answer is incorrect. Correct answer is ${num1} * ${num2} = ${num1 * num2}`;
+                document.getElementById('message').classList.add('game-over');
+                clearInterval(timer);
+                disableGame();
+            }
+        }
+
+        function updateHistory() {
+            let historyList = document.getElementById('productHistory');
+            historyList.innerHTML = 'Score: ' + history.length;
+
+            // history.forEach((entry, index) => {
+            //     let listItem = document.createElement('li');
+            //     listItem.textContent = `${index + 1}: ${entry.numbers.join(' * ')} = ${entry.product}`;
+            //     historyList.appendChild(listItem);
+            // });
+        }
+
+        function disableGame() {
+            document.getElementById('userInput').disabled = true;
+            document.getElementById('restartButton').style.display = 'inline-block';
+        }
+
+        document.getElementById('userInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        function startTimer() {
+            clearInterval(timer);
+            timeElapsed = 0;
+            timer = setInterval(() => {
+                timeElapsed++;
+                document.getElementById('timerDisplay').textContent = `Time: ${timeElapsed} seconds`;
+            }, 1000);
+        }
+
+        window.onload = startGame;
+
+        function restartGame() {
+            previousSum = 0;
+            currentSum = 0;
+            history = [];
+            document.getElementById('userInput').disabled = false;
+            document.getElementById('restartButton').style.display = 'none';
+            document.getElementById('message').textContent = '';
+            document.getElementById('message').classList.remove('game-over');
+            document.getElementById('productHistory').innerHTML = '';
+            document.getElementById('timerDisplay').textContent = '';
+            timeStart = false;
+            startGame();
+        }
+    </script>
+</body>
+</html>
